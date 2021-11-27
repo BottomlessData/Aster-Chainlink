@@ -14,7 +14,7 @@ contract TaskFactory{
         
     //announcements
     event newTaskCreation(uint id, address taskAdd);
-    
+
     constructor() {
     }
     
@@ -36,6 +36,9 @@ contract TaskFactory{
         //create new task and add to the array
         Task newtask = new Task(id, taskOwner, numLabelers, amount);
         payable(address(newtask)).transfer(amount);
+        // (bool success,) = address(newtask).call{value: amount}("");
+        // require(success);
+
         tasks.push(address(newtask));
 
         emit newTaskCreation(id, address(newtask));

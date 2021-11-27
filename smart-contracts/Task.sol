@@ -5,7 +5,12 @@ pragma solidity >=0.8.0 <0.9.0;
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
-contract Task{    
+contract Task{  
+    // // This function is called for plain Ether transfers, i.e.
+    // // for every call with empty calldata.
+    receive() external payable { }
+    fallback() external payable {}  
+
     //Interfacing chainlink pricefeed oracle
     //Aggreator: MATIC/USD on Mumbai Testnet
     //Address: 0xd0D5e3DB44DE05E9F294BB0a3bEEaF030DE24Ada
@@ -25,7 +30,7 @@ contract Task{
     uint256 rewardPerLabeler;
     uint256 fees;
 
-    constructor(uint TID, address tOwner, uint nLabelers, uint256 amount){     
+    constructor(uint TID, address tOwner, uint nLabelers, uint256 amount) payable{     
         // initialize variables
         taskOwner = tOwner;
         TaskId = TID;
@@ -138,6 +143,11 @@ contract Task{
     function getBalance() public view returns(uint256){
         return msg.sender.balance;
     }
+        
+    //get number of labelers paid
+    function getnumLabelersPaid() public view returns(uint){
+        return numLabelersPaid;
+    }
     
     /**
      * Returns the latest price of TOKEN in USD
@@ -150,7 +160,6 @@ contract Task{
             uint timeStamp,
             uint80 answeredInRound
         ) = priceFeed.latestRoundData();
-        price = price / 10**8;
         return price;
     }
 
