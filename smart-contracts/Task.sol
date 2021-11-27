@@ -5,10 +5,7 @@ pragma solidity >=0.8.0 <0.9.0;
 import "openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
-contract Task{
-    //Matic contract address on Mumbai testnet
-    IERC20 public TOKEN = IERC20(address(0xbe188D6641E8b680743A4815dFA0f6208038960F));
-    
+contract Task{    
     //Interfacing chainlink pricefeed oracle
     //Aggreator: MATIC/USD on Mumbai Testnet
     //Address: 0xd0D5e3DB44DE05E9F294BB0a3bEEaF030DE24Ada
@@ -44,7 +41,8 @@ contract Task{
     function fundTask(uint256 amount) public payable{
         amount = amount * 10**18;
         // require(msg.sender == taskOwner, "Task: Only Task Owner can fund this contract.");
-        require(TOKEN.balanceOf(msg.sender) >= amount, "Task: insufficient funds.");
+        // require(TOKEN.balanceOf(msg.sender) >= amount, "Task: insufficient funds.");
+        require(msg.sender.balance >= amount, "Task: insufficient funds.");
         require(msg.value == amount, "Task: Unmatching funds.");
         
         feeCalculations(amount);
@@ -53,7 +51,7 @@ contract Task{
     function feeCalculations(uint256 amount) private {
         //5% of payment amount is collected as process fees
         fees = (5 * amount)/100;
-        TOKEN.transfer(manager, fees);
+        manager.transfer(fees);
         
         //update totalAmount after paying fees
         totalAmount = totalAmount + (amount - fees);
@@ -76,8 +74,8 @@ contract Task{
     }
     
     function payLabeler(address payable labeler) private{
-        //transfer CELO to labeler
-        TOKEN.transfer(labeler, rewardPerLabeler);
+        //transfer MATIC to labeler
+        labeler.transfer(rewardPerLabeler);
         //update totalAmount
         totalAmount = totalAmount - rewardPerLabeler;
     }
@@ -106,7 +104,7 @@ contract Task{
     
     //get balance of Task SC
     function getTaskBalance() public view returns(uint){
-        return TOKEN.balanceOf(address(this));
+        return address(this).balance;
     }
     
     function getTaskID() public view returns(uint){
@@ -138,7 +136,7 @@ contract Task{
     
     //get balance of the sender 
     function getBalance() public view returns(uint256){
-        return TOKEN.balanceOf(msg.sender);
+        return msg.sender.balance;
     }
     
     /**
@@ -152,6 +150,7 @@ contract Task{
             uint timeStamp,
             uint80 answeredInRound
         ) = priceFeed.latestRoundData();
+        price = price / 10**8;
         return price;
     }
 
