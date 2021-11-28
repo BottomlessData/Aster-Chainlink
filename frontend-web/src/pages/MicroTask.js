@@ -11,23 +11,18 @@ import POSTS from '../_mocks_/blog';
 import TaskPostCard from 'src/components/MicroTask/TaskPostCard';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import MaticPrice from 'src/components/MicroTask/MaticPrice';
+
 
 import Web3 from 'web3'
 import { Web3ReactProvider } from '@web3-react/core'
-import { InjectedConnector } from '@web3-react/injected-connector'
-import { useWeb3React } from "@web3-react/core"
 
-import { task_contract } from '../components/DataLabel/abi';
 
 function getLibrary(provider) {
   return new Web3(provider)
 }
 
-const injected = new InjectedConnector({
-  supportedChainIds: [80001],
-})
 
-const web3 = new Web3(Web3.givenProvider);
 
 // ----------------------------------------------------------------------
 
@@ -40,53 +35,9 @@ const SORT_OPTIONS = [
 // ----------------------------------------------------------------------
 
 export default function MicroTask() {
-    const [TASKLIST, setTASKLIST] = useState([]);
-    const { active, account, library, connector, activate, deactivate } = useWeb3React();
-    const [maticPrice, setMaticPrice] = useState(0);
-
-  const getMaticToUSDPrice = async () => {
-    if(!active){
-      try {
-        await activate(injected);
-      } catch (ex) {
-        console.log(ex)
-      }
-    }
-    const TaskContract = new web3.eth.Contract(task_contract.abi, TASKLIST[0].contract_address);
-    const tx = await TaskContract.methods.getLatestPrice().call();
-    console.log(tx);
-    setMaticPrice(tx/(10**8));
-  } 
-
-    const loadTaskList = async () => {
-        const response = await axios('https://us-central1-aster-chainlink.cloudfunctions.net/api/tasks');
-        const task_list = response.data.map((task) => {
-          return {
-            id: task.id,
-            name: task.name,
-            task:'image classification',
-            dataType: 'image',
-            offer: task.total_price + " MATIC",
-            status: 'in progress',
-            contract_address: task.contract_id,
-            number_of_labelers: task.number_of_labelers,
-            number_of_submission: task.number_of_submission,
-            description: task.description,
-            total_price: task.total_price
-          }
-        });
-    
-        setTASKLIST(task_list);
-      };
-    
-      useEffect(()=>{
-        loadTaskList();
-      },[]);
-
 
   return (
     <Page title="Classify Task">
-      <Web3ReactProvider getLibrary={getLibrary} >
         <Container>
           <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
             <Typography variant="h4" gutterBottom>
@@ -99,15 +50,11 @@ export default function MicroTask() {
             <BlogPostsSort options={SORT_OPTIONS} />
           </Stack>
 
-          <Button onClick={getMaticToUSDPrice}>MATIC to USD</Button>
-          <Grid container spacing={3}>
-            {TASKLIST.map((post, index) => (
-              <TaskPostCard key={post.id} post={post} index={index} maticPrice={maticPrice}/>
-            ))}
-          </Grid>
+          <Web3ReactProvider getLibrary={getLibrary} >
+            <MaticPrice />
+          </Web3ReactProvider>
 
         </Container>
-      </Web3ReactProvider>
     </Page>
   );
 }

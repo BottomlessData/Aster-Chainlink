@@ -106,7 +106,7 @@ export default function TaskPostCard({ post, index, maticPrice }) {
                             color: "white"
                         }}
                     >
-                        {"1 MATIC = " + maticPrice + " USD"}
+                        {((post.total_price / post.number_of_labelers) * maticPrice) + " USD"}
                     </Typography>
                     :
                     <></>
