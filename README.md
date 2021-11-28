@@ -1,22 +1,7 @@
 # ⚡ Aster - Collective Data Labeling⚡
 Aster Repo for Chainklink Hackathon 2021
 
-
 ![Aster](./assets/logo.png?raw=true "Aster")
-#### Hackathon Track:
-1. Grand Prize
-2. Infrastructure and Web3 Track
-3. Interoperability Track
-4. DeFi Track
-5. Cash In Cash Out Track
-6. Best Students Prize
-7. India Prizes
-8. LATAM Prizes
-9. Brazil Prizes
-10. Africa Prizes
-
-##### Region location
-USA, Portugal
 
 ##### Team Members
 - Tiago Antunes, Backend Developer
