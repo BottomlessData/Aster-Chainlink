@@ -71,13 +71,14 @@ export default function MaticPrice() {
 
   return (
         <Container>
-          
-          <Button onClick={getMaticToUSDPrice}>MATIC to USD</Button>
           {
-              maticPrice != 0 ? 
-              <Typography variant="h6">{"1 MATIC = " + maticPrice + " USD"}</Typography>
+              maticPrice == 0 ? 
+              <Button onClick={getMaticToUSDPrice}>MATIC to USD</Button>
               :
-              <></>
+              <div>
+              <Typography variant="h6">{"1 MATIC = " + maticPrice + " USD"}</Typography>
+              <Button onClick={getMaticToUSDPrice}>refresh</Button>
+              </div>
           }
           
           <Box sx={{height: 10}}/>
