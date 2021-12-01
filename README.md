@@ -22,7 +22,7 @@ This project contains both web2.0 and web3.0 technologies. We use Firebase as As
 
 #### URLs
 1. [DevPost Homepage](https://devpost.com/software/bottomless-data)
-2. [Aster Demo Website](https://aster-38850.web.app/)
+2. [Aster Demo Website](https://aster-chainlink.web.app/)
 
 #### Presentation
 1. [Youtube Demo](https://youtu.be/1dXCEFa9lQQ)
